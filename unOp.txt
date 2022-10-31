@@ -1,0 +1,10 @@
+++
+--
+!
+#
+-
+~
+&
+*
+__?unary?operator__DOES_NOTHING__
+goto

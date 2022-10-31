@@ -1,0 +1,167 @@
+\item { 
+struct  lexeme\{
+std::string lex;
+states_num type;
+inline bool operator==(const std::string& other) { return other == lex; }
+inline bool operator!=(const std::string& other) { return other != lex; }
+}
+\item { 
+class  error\{
+/*error(error_type type_p = unexpected_lexeme, const std::string& addition_p =
+"", const std::string& second_addition_p = "") : type(type_p),
+addition(addition_p), second_addition(second_addition_p) { layers[0] = layer1;
+layers[1] = layer2;
+layers[2] = layer3;
+problem = cur;
+problem_index = current_index;
+}*/
+// error_type type;
+public:
+error() {
+problem_index = current_index;
+problem = cur;
+layers[0] = layer1;
+layers[1] = layer2;
+layers[2] = layer3;
+}
+lexeme problem;
+std::string second_addition;
+std::string addition;
+int64_t problem_index;
+std::string layers[3];
+}
+\item { 
+class  unexpected_lexeme_error : public error\{
+public:
+unexpected_lexeme_error() {}  // please don't use it when throwing
+unexpected_lexeme_error(
+const std::string&
+expected_p) {  // expected_p is which lexeme is expected;
+addition = expected_p;
+}
+}
+\item { 
+class  unexpected_lexeme_type_error : public error\{
+public:
+unexpected_lexeme_type_error() {}  // please don't use it when throwing
+unexpected_lexeme_type_error(
+const std::string&
+expected_p) {  // expected_p is which type of lexeme is expected;
+addition = expected_p;
+}
+}
+\item { 
+class  out_of_bounds_forth_error : public error\{
+public:
+out_of_bounds_forth_error() {}
+}
+\item { 
+class  out_of_bounds_back_error : public error\{
+public:
+out_of_bounds_back_error() {}
+}
+\item { 
+class  unknown_id_error : public error\{
+public:
+unknown_id_error() {}  // please don't use it when throwing
+// unknown_name_p = id that wasn't found in TIDs
+unknown_id_error(const std::string& unknown_name_p,
+const std::string& addition_p = "") {
+addition = unknown_name_p;
+if (addition_p == "") addition += "(" + addition_p + ")";
+}
+}
+\item { 
+class  wrong_operand_type_error : public error\{
+// not really used anywhere
+// you'd better use type_incompatibility_error
+public:
+wrong_operand_type_error() {}  // please don't use it when throwing
+wrong_operand_type_error(const std::string& expected_type_p) {
+addition = expected_type_p;
+}
+}
+\item { 
+class  not_allowed_error : public error\{
+public:
+not_allowed_error() {}  // please don't use it when throwing
+// not_allowed_p = the thing that is not allowed e.g. function, double const;
+not_allowed_error(const std::string& not_allowed_p) {
+addition = not_allowed_p;
+}
+}
+\item { 
+class  wrong_returning_type_error : public error\{
+public:
+wrong_returning_type_error() {}  // don't use when throwing
+wrong_returning_type_error(const std::string& expected_type,
+const std::string& received_type) {
+addition = expected_type;
+second_addition = received_type;
+}
+}
+\item { 
+struct  tid\{
+std::vector<std::string> type;
+tid* parent;
+std::vector<std::string> name;
+std::vector<tid*> child;
+tid(tid* par) {
+type.clear();
+parent = par;
+child.clear();
+}
+}
+\item { 
+struct  functid\{
+std::vector<std::string> returning_type;
+std::vector<std::vector<std::string>> parametr;
+std::vector<std::string> name;
+std::vector<bool> prototype_only;
+std::vector<std::vector<std::string>> parameter_name;
+}
+\item { 
+struct  poliz_unit\{
+public:
+poliz_unit(const std::string& val_p, const int& type_p,
+void* const_val_p = nullptr)
+: val(val_p), type(type_p), const_val(const_val_p) {}
+std::string val;
+int type;
+// 0 - var
+// 1 - operator
+// 2 - const
+// 4 - declaration
+void* const_val;
+}
+\item { 
+struct  func_place\{
+public:
+func_place(const std::string& name_p, const int& ind_p)
+: name(name_p), index(ind_p) {}
+int index;
+std::string name;
+}
+\item { 
+struct  wrong_to_check_error : public error\{
+wrong_to_check_error() {}
+}
+\item { 
+class  service_error : public error\{
+public:
+service_error(const std::string& addition_p) { addition = addition_p; }
+}
+\item { 
+class  typep\{
+public:
+std::string type_name;
+std::string name;
+void* val;
+int size;
+typep(std::string var_type, std::string var_name, void* value) {
+type_name = var_type;
+name = var_name;
+val = value;
+}
+typep() { val = NULL; }
+}
